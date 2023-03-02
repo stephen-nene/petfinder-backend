@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_02_084139) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_02_093216) do
   create_table "allPets", force: :cascade do |t|
     t.string "Type"
     t.string "name"
