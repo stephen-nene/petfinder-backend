@@ -4,12 +4,12 @@ default: &default
 
 development:
   <<: *default
-  database: db/todos-dev.sqlite3
+  database: db/petfinder.sqlite3
 
 production:
   <<: *default
-  database: db/todos-prod.sqlite3
+  database: db/petfinder.sqlite3
 
 steve:
   <<: *default
-  database: db/all-pets.sqlite3
+  database: db/petfinder.sqlite3
