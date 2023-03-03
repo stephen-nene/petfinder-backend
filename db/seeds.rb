@@ -1,8 +1,12 @@
 # db/seeds.rb
 
+Pet.delete_all
+
 10.times do |i|
+  animal_types = ['Dog', 'Cat', 'Bird', 'Fish']
+
   name = Faker::Creature::Animal.name
-  animal_type = Faker::Creature::Animal.class_name
+  animal_type = animal_types.sample
   breed = Faker::Creature::Dog.breed
   age = rand(1..15)
   gender = ["Male", "Female"].sample

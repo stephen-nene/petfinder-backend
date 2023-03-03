@@ -29,19 +29,40 @@ class PetsController < Sinatra::Base
 
   get '/pets' do
     # logic to retrieve and display pets
+    pets = Pet.all
   end
 
   get '/pets/:id' do
     # logic to retrieve and display a specific pet
+    pet = Pet.find(params[:id])
+    if pet
+      { pet: pet }.to_json
+    else
+      halt 404
+    end
   end
 
 
   patch '/pets/:id' do
     # logic to update a specific pet
+    pet = Pet.find(params[:id])
+    if pet
+      pet.update(params)
+      { pet: pet }.to_json
+    else
+      halt 404
+    end
   end
 
   delete '/pets/:id' do
     # logic to delete a specific pet
+    pet = Pet.find(params[:id])
+    if pet
+      pet.destroy
+      { message: "Pet deleted" }.to_json
+    else
+      halt 404
+    end
   end
 
     get '/test' do
