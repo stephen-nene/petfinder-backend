@@ -1,4 +1,4 @@
 require_relative './config/environment'
 # require_relative './app/controllers/todo_controller'
 
-use 
+run PetsController
