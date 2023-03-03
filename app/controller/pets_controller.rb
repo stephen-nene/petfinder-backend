@@ -6,7 +6,7 @@ class PetsController < Sinatra::Base
     'Welcome to Petfinder!'
   end
 
-  private
+  # private
 
 # def pet_params
 #   params.require(:pet).permit(:name, :animal_type, :breed, :age, :gender, :description)
@@ -14,19 +14,20 @@ class PetsController < Sinatra::Base
 
   # Route to create a new pet
   post '/pets/create' do
-    begin
-      pet = Pet.new(name: params[:name], animal_type: params[:animal_type], breed: params[:breed], age: params[:age], gender: params[:gender], description: params[:description])
+    puts "Received request to create pet: #{params.inspect}"
+    pet = Pet.new(name: params[:name], animal_type: params[:animal_type], breed: params[:breed], age: params[:age], gender: params[:gender], description: params[:description])
 
-      if pet.save
-        { message: "Pet with ID #{pet.id} has been created." }.to_json
-      else
-        status 400
-        { error: pet.errors.full_messages.join(', ') }.to_json
-      end
-    rescue => e
+    if pet.save
+      status 200
+      { message: "Pet with ID #{pet.id} has been created." }.to_json
+    else
+      puts pet.errors.full_messages
       status 400
-      { error: e.message }.to_json
+      { error: pet.errors.full_messages.join(', ') }.to_json
     end
+  rescue StandardError => e
+    status 400
+    { error: e.message }.to_json
   end
 
 
