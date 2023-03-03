@@ -1,41 +1,51 @@
 class PetsController < Sinatra::Base
   # include ActionController::Parameters
 
+  # Route to display a welcome message
   get '/' do
     'Welcome to Petfinder!'
   end
+
+  private
+
+# def pet_params
+#   params.require(:pet).permit(:name, :animal_type, :breed, :age, :gender, :description)
+# end
+
+  # Route to create a new pet
   post '/pets/create' do
-    pet_params = params[:pet].slice(:name, :animal_type, :breed, :age, :gender, :description)
-    pet = Pet.new(pet_params)
+    begin
+      pet = Pet.new(name: params[:name], animal_type: params[:animal_type], breed: params[:breed], age: params[:age], gender: params[:gender], description: params[:description])
 
-    if pet.save
-      status 201
-      { message: "Pet with ID #{pet.id} has been created." }.to_json
-    else
-      status 422
-      error_messages = pet.errors.full_messages.join(', ')
-      { error: error_messages }.to_json
+      if pet.save
+        { message: "Pet with ID #{pet.id} has been created." }.to_json
+      else
+        status 400
+        { error: pet.errors.full_messages.join(', ') }.to_json
+      end
+    rescue => e
+      status 400
+      { error: e.message }.to_json
     end
-
-    pet_params.to_json
   end
 
 
 
-
+  # Route to display all pets
   get '/pets' do
-    # logic to retrieve and display pets
     pets = Pet.all
     if pets
       content_type :json
       pets.map { |pet| { pet: pet } }.to_json
     else
-      halt 404
+      status 404
+      { error: "No pets found" }.to_json
     end
   end
 
+
+  # Route to display a specific pet by ID
   get '/pets/:id' do
-    # logic to retrieve and display a specific pet
     pet = Pet.find(params[:id])
     if pet
       content_type :json
@@ -45,9 +55,8 @@ class PetsController < Sinatra::Base
     end
   end
 
-
+  # Route to update a specific pet by ID
   patch '/pets/:id' do
-    # logic to update a specific pet
     pet = Pet.find(params[:id])
     if pet
       pet_params = params.slice(:name, :animal_type, :breed, :age, :gender, :description)
@@ -63,8 +72,8 @@ class PetsController < Sinatra::Base
     end
   end
 
+  # Route to delete a specific pet by ID
   delete '/pets/:id' do
-    # logic to delete a specific pet
     pet = Pet.find(params[:id])
     if pet
       pet.destroy
@@ -74,8 +83,8 @@ class PetsController < Sinatra::Base
     end
   end
 
-    get '/test' do
-      "App is working fine"
-    end
-
+  # Route to test if the app is working
+  get '/test' do
+    "App is working fine"
+  end
 end
