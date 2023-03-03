@@ -1,7 +1,3 @@
 class User < ActiveRecord::Base
-
-  # puts User.column_names
-
-  # puts User.all
-
+  has_many :pets, foreign_key: "owner_id"
 end
