@@ -3,11 +3,12 @@
 Pet.delete_all
 
 10.times do |i|
-  animal_types = ['Dog', 'Cat', 'Bird', 'Fish']
+  animal_types = ['Dog', 'Cat', 'Horse']
 
-  name = Faker::Creature::Animal.name
   animal_type = animal_types.sample
-  breed = Faker::Creature::Dog.breed
+  name = Faker::Creature.const_get(animal_type).name
+  breed = Faker::Creature.const_get(animal_type).breed
+
   age = rand(1..15)
   gender = ["Male", "Female"].sample
   description = Faker::Lorem.paragraph(sentence_count: 2)

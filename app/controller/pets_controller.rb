@@ -1,41 +1,44 @@
 class PetsController < Sinatra::Base
+  # include ActionController::Parameters
 
   get '/' do
     'Welcome to Petfinder!'
   end
-
   post '/pets/create' do
-    # Get the parameters from the request
-    name = params[:name]
-    animal_type = params[:animal_type]
-    breed = params[:breed]
-    age = params[:age]
-    gender = params[:gender]
-    description = params[:description]
+    pet_params = params[:pet].slice(:name, :animal_type, :breed, :age, :gender, :description)
+    pet = Pet.new(pet_params)
 
-    # Create a new Pet object with the given parameters
-    pet = Pet.create(name: name, animal_type: animal_type, breed: breed, age: age, gender: gender, description: description)
-
-    # If the pet is successfully saved, return a success message with the pet's ID
     if pet.save
+      status 201
       { message: "Pet with ID #{pet.id} has been created." }.to_json
     else
-      # If there was an error saving the pet, return an error message
-      status 500
-      { error: "Could not create pet." }.to_json
+      status 422
+      error_messages = pet.errors.full_messages.join(', ')
+      { error: error_messages }.to_json
     end
+
+    pet_params.to_json
   end
+
+
 
 
   get '/pets' do
     # logic to retrieve and display pets
     pets = Pet.all
+    if pets
+      content_type :json
+      pets.map { |pet| { pet: pet } }.to_json
+    else
+      halt 404
+    end
   end
 
   get '/pets/:id' do
     # logic to retrieve and display a specific pet
     pet = Pet.find(params[:id])
     if pet
+      content_type :json
       { pet: pet }.to_json
     else
       halt 404
@@ -47,8 +50,14 @@ class PetsController < Sinatra::Base
     # logic to update a specific pet
     pet = Pet.find(params[:id])
     if pet
-      pet.update(params)
-      { pet: pet }.to_json
+      pet_params = params.slice(:name, :animal_type, :breed, :age, :gender, :description)
+      if pet.update(pet_params)
+        { pet: pet }.to_json
+      else
+        status 422
+        error_messages = pet.errors.full_messages.join(', ')
+        { error: error_messages }.to_json
+      end
     else
       halt 404
     end
