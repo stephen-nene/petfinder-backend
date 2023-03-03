@@ -16,7 +16,7 @@ gem 'require_all', '~> 3.0'
 
 gem "thin"
 
-gem 'petfinder', '~> 2.0', '>= 2.0.1'
+gem 'petfinder'
 
 group :development do
     gem 'rerun', '~> 0.14.0'
