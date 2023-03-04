@@ -6,31 +6,21 @@ class PetsController < Sinatra::Base
     'Welcome to Petfinder!'
   end
 
-  # private
+ # Route to create a new pet
+ post '/pets/create' do
+  data = JSON.parse(request.body.read)
+  puts "Received request to create pet: #{data.inspect}"
 
-# def pet_params
-#   params.require(:pet).permit(:name, :animal_type, :breed, :age, :gender, :description)
-# end
+  begin
+    # approach 2 (hash of a column)
+    pet = Pet.create(data)
+    { message: "Pet with ID #{pet.id} has been created." }.to_json
 
-  # Route to create a new pet
-  post '/pets/create' do
-    puts "Received request to create pet: #{params.inspect}"
-    pet = Pet.new(name: params[:name], animal_type: params[:animal_type], breed: params[:breed], age: params[:age], gender: params[:gender], description: params[:description])
-
-    if pet.save
-      status 200
-      { message: "Pet with ID #{pet.id} has been created." }.to_json
-    else
-      puts pet.errors.full_messages
-      status 400
-      { error: pet.errors.full_messages.join(', ') }.to_json
-    end
   rescue StandardError => e
     status 400
     { error: e.message }.to_json
   end
-
-
+end
 
   # Route to display all pets
   get '/pets' do
@@ -44,7 +34,6 @@ class PetsController < Sinatra::Base
     end
   end
 
-
   # Route to display a specific pet by ID
   get '/pets/:id' do
     pet = Pet.find(params[:id])
@@ -56,33 +45,42 @@ class PetsController < Sinatra::Base
     end
   end
 
-  # Route to update a specific pet by ID
-  patch '/pets/:id' do
-    pet = Pet.find(params[:id])
-    if pet
-      pet_params = params.slice(:name, :animal_type, :breed, :age, :gender, :description)
-      if pet.update(pet_params)
-        { pet: pet }.to_json
-      else
-        status 422
-        error_messages = pet.errors.full_messages.join(', ')
-        { error: error_messages }.to_json
-      end
+# Route to update a specific pet by ID
+put "/pets/update/:id" do
+  begin
+    pet_id = params["id"].to_i
+    pet = Pet.find(pet_id)
+    pet_params = JSON.parse(request.body.read)
+    pet_params.delete("id") # Remove "id" key from params since it is not needed for updating
+    if pet.update(pet_params)
+      { message: "Pet updated successfully" }.to_json
     else
-      halt 404
+      status 422
+      error_messages = pet.errors.full_messages.join(', ')
+      { error: error_messages }.to_json
     end
+  rescue ActiveRecord::RecordNotFound
+    status 404
+    { error: "Pet not found" }.to_json
+  rescue => e
+    status 400
+    { error: e.message }.to_json
   end
+end
 
-  # Route to delete a specific pet by ID
-  delete '/pets/:id' do
-    pet = Pet.find(params[:id])
-    if pet
-      pet.destroy
-      { message: "Pet deleted" }.to_json
-    else
-      halt 404
-    end
+
+delete '/pets/:id_or_name_or_breed' do
+  pet = Pet.find_by(id: params[:id_or_name_or_breed]) ||
+        Pet.find_by(name: params[:id_or_name_or_breed]) ||
+        Pet.find_by(breed: params[:id_or_name_or_breed])
+
+  if pet
+    pet.destroy
+    { message: "Pet deleted" }.to_json
+  else
+    halt 404
   end
+end
 
   # Route to test if the app is working
   get '/test' do
