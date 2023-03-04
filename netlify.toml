@@ -1,0 +1,15 @@
+[build]
+  command = "bundle exec rake start"
+  publish = "public"
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:4567/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true

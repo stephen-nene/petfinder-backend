@@ -8,6 +8,8 @@ gem 'rake', '~>13.0', '>= 13.0.6'
 
 gem 'sqlite3', '~> 1.6', '>= 1.6.1'
 
+gem 'sinatra-cross_origin'
+
 gem 'sinatra-activerecord', '~> 2.0', '>=2.0.26'
 
 gem 'puma', '~> 6.1'
