@@ -4,7 +4,7 @@ require 'sinatra/cross_origin'
 class PetsController < Sinatra::Base
   # Register the gem
   register Sinatra::CrossOrigin
-
+  
   # include ActionController::Parameters
   configure do
     enable :cross_origin
