@@ -18,6 +18,8 @@ gem 'require_all', '~> 3.0'
 
 gem "thin"
 
+gem 'bcrypt'
+
 gem 'faker'
 
 group :development do
