@@ -1,5 +1,6 @@
 require 'bcrypt'
 
+
 User.destroy_all
 
 # Add a single user to the database
@@ -13,6 +14,9 @@ user = User.create!(
 
 
 Pet.destroy_all
+
+
+
 
 10.times do |i|
   animal_types = ['Dog', 'Cat', 'Horse']

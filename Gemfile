@@ -14,6 +14,8 @@ gem 'sinatra-activerecord', '~> 2.0', '>=2.0.26'
 
 gem 'puma', '~> 6.1'
 
+gem 'rest-client'
+
 gem 'require_all', '~> 3.0'
 
 gem "thin"
