@@ -1,7 +1,7 @@
 require 'rest-client'
 require 'json'
 
-
+Pet.destroy_all
 
 # Set up Petfinder API endpoint and access token
 endpoint = 'https://api.petfinder.com/v2/animals'
@@ -40,4 +40,4 @@ else
 end
 
 
-Pet.destroy_all
+

@@ -15,7 +15,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_05_083629) do
     t.string "name"
     t.string "animal_type"
     t.string "breed"
-    t.string "age"
+    t.integer "age"
     t.string "gender"
     t.string "description"
     t.datetime "created_at", null: false
