@@ -3,15 +3,15 @@ require 'sinatra/cross_origin'
 
 class PetsController < Sinatra::Base
   # Register the gem
-  register Sinatra::CrossOrigin
-  
-  # include ActionController::Parameters
-  configure do
-    enable :cross_origin
-    set :allow_origin, :any
-    set :allow_methods, [:get, :post, :put, :delete, :options]
-    set :allow_headers, ["*", "Content-Type", "Accept", "Authorization"]
-  end
+  # register Sinatra::CrossOrigin
+
+  # # include ActionController::Parameters
+  # configure do
+  #   enable :cross_origin
+  #   set :allow_origin, :any
+  #   set :allow_methods, [:get, :post, :put, :delete, :options]
+  #   set :allow_headers, ["*", "Content-Type", "Accept", "Authorization"]
+  # end
 
   # Route to display a welcome message
   get '/' do
