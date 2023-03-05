@@ -94,6 +94,16 @@ delete '/pets/:id_or_name_or_breed' do
   end
 end
 
+get '/pets/my_pets' do
+  if session[:user_id]
+    user = User.find(session[:user_id])
+    user.pets.to_json
+  else
+    status 401
+    { message: 'Unauthorized' }.to_json
+  end
+end
+
   # Route to test if the app is working
   get '/test' do
     "App is working fine"

@@ -1,11 +1,14 @@
+require 'bcrypt'
+
 class UserController < Sinatra::Base
-  # Route to display a welcome message
-  get '/users' do
-    'Welcome to Petfinder user !'
+  # Route to display all users
+  get '/users/all' do
+    users = User.all
+    users.to_json
   end
 
   # Route to create a new user
-  post '/users' do
+  post '/users/create' do
     # Parse the request body JSON
     data = JSON.parse(request.body.read)
 
@@ -18,13 +21,12 @@ class UserController < Sinatra::Base
       { message: 'User already exists' }.to_json
     else
       # Create a new user with the provided data
+      password_hash = BCrypt::Password.create(data['password'])
       new_user = User.create(
         username: data['username'],
+        password_hash: password_hash,
         email: data['email']
       )
-
-      # Set the password using the `password=` method to create a hash
-      new_user.password = data['password']
 
       # Save the user to the database
       new_user.save
@@ -34,21 +36,26 @@ class UserController < Sinatra::Base
     end
   end
 
-  # Route to handle user login
-  post '/login' do
+  # Route to authenticate a user
+  post '/users/authenticate' do
     # Parse the request body JSON
     data = JSON.parse(request.body.read)
 
-    # Authenticate the user
-    user = User.authenticate(data['username'], data['password'])
+    # Find the user by username
+    user = User.find_by(username: data['username'])
 
-    if user
+    if user && BCrypt::Password.new(user.password_hash) == data['password']
       # Return the authenticated user as JSON
       user.to_json
+      session[:user_id] = user.id
     else
       # Return an error if authentication fails
       status 401
       { message: 'Invalid username or password' }.to_json
     end
   end
+
+
+
+
 end

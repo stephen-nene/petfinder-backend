@@ -1,6 +1,6 @@
 require 'bcrypt'
 
-Pet.destroy_all
+# Pet.destroy_all
 User.destroy_all
 
 # Add a single user to the database
