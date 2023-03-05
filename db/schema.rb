@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_03_080223) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_05_083629) do
   create_table "pets", force: :cascade do |t|
     t.string "name"
     t.string "animal_type"
@@ -21,6 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_03_080223) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "owner_id"
+    t.string "url"
     t.index ["owner_id"], name: "index_pets_on_owner_id"
   end
 
