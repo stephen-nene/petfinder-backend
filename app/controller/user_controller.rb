@@ -87,10 +87,9 @@ post '/users/authenticate' do
     # Set the session user_id to the authenticated user's id
     session[:user_id] = user.id
 
-    puts session[:user_id]
-
-    # Return the authenticated user as JSON
-    user.to_json
+    # Return the authenticated user and session as JSON
+    content_type :json
+    { user: user, session: session }.to_json
   else
     # Return an error if authentication fails
     status 401
