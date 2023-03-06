@@ -32,7 +32,7 @@ class PetsController < Sinatra::Base
       content_type :json
       { pets: pets }.to_json
     else
-      halt 404
+      halt 404, "No pets found"
     end
   end
 
