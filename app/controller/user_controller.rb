@@ -87,6 +87,8 @@ post '/users/authenticate' do
     # Set the session user_id to the authenticated user's id
     session[:user_id] = user.id
 
+    puts session[:user_id]
+
     # Return the authenticated user as JSON
     user.to_json
   else
