@@ -20,6 +20,7 @@ class PetsController < Sinatra::Base
   end
 
   get '/mypet' do
+    puts owner_id
     owner_id = session[:user_id]
     # owner_id = params[:owner_id]
     if owner_id.present?
