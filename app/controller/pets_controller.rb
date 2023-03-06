@@ -48,6 +48,18 @@ end
     end
   end
 
+  # Route to get the pets owned by the currently logged in user
+get '/users/pets' do
+  # Find the user by user_id in the session
+  user = User.find(session[:user_id])
+
+  # Find the pets owned by the user
+  pets = user.pets
+
+  # Return the pets as JSON
+  pets.to_json
+end
+
   # Route to display a specific pet by ID
   get '/pets/:id' do
     pet = Pet.find(params[:id])

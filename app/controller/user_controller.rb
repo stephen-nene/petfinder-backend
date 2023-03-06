@@ -20,6 +20,18 @@ class UserController < Sinatra::Base
     end
   end
 
+  # Route to get a specific user
+get '/users/:id' do
+  user = User.find(params[:id])
+  if user
+    content_type :json
+    { user: user }.to_json
+  else
+    status 404
+    { error: "User not found" }.to_json
+  end
+end
+
   # Route to display all users
   get '/users' do
     users = User.all
@@ -63,24 +75,27 @@ class UserController < Sinatra::Base
     end
   end
 
-  # Route to authenticate a user
-  post '/users/authenticate' do
-    # Parse the request body JSON
-    data = JSON.parse(request.body.read)
+# Route to authenticate a user
+post '/users/authenticate' do
+  # Parse the request body JSON
+  data = JSON.parse(request.body.read)
 
-    # Find the user by username
-    user = User.find_by(username: data['username'])
+  # Find the user by username
+  user = User.find_by(username: data['username'])
 
-    if user && BCrypt::Password.new(user.password_hash) == data['password']
-      # Return the authenticated user as JSON
-      session[:user_id] = 2
-      user.to_json
-    else
-      # Return an error if authentication fails
-      status 401
-      { message: 'Invalid username or password' }.to_json
-    end
+  if user && BCrypt::Password.new(user.password_hash) == data['password']
+    # Set the session user_id to the authenticated user's id
+    session[:user_id] = user.id
+
+    # Return the authenticated user as JSON
+    user.to_json
+  else
+    # Return an error if authentication fails
+    status 401
+    { message: 'Invalid username or password' }.to_json
   end
+end
+
 
 
 
