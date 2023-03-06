@@ -1,17 +1,19 @@
 # Import the gem
-require 'sinatra/cross_origin'
+# require 'sinatra/cross_origin'
 
 class PetsController < Sinatra::Base
-  # Register the gem
-  # register Sinatra::CrossOrigin
+  # Set the CORS headers for all requests
+  before do
+    set_cors_headers
+  end
 
-  # # include ActionController::Parameters
-  # configure do
-  #   enable :cross_origin
-  #   set :allow_origin, :any
-  #   set :allow_methods, [:get, :post, :put, :delete, :options]
-  #   set :allow_headers, ["*", "Content-Type", "Accept", "Authorization"]
-  # end
+  private
+
+  def set_cors_headers
+    headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+    headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+  end
 
   # Route to display a welcome message
   get '/' do
@@ -94,15 +96,6 @@ delete '/pets/:id_or_name_or_breed' do
   end
 end
 
-get '/pets/my_pets' do
-  if session[:user_id]
-    user = User.find(session[:user_id])
-    user.pets.to_json
-  else
-    status 401
-    { message: 'Unauthorized' }.to_json
-  end
-end
 
   # Route to test if the app is working
   get '/test' do

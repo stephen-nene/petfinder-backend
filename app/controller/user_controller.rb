@@ -1,11 +1,38 @@
 require 'bcrypt'
 
 class UserController < Sinatra::Base
+  before do
+    set_cors_headers
+  end
+
+  private
+
+  def set_cors_headers
+    headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+    headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+
+    if request.request_method == 'OPTIONS'
+      headers['Access-Control-Allow-Origin'] = '*'
+      headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+      headers['Access-Control-Allow-Headers'] = 'Content-Type'
+      halt 200
+    end
+  end
+
   # Route to display all users
-  get '/users/all' do
+  get '/users' do
     users = User.all
+    if users
+      content_type :json
+      users.map { |user| { user: user } }.to_json
+    else
+      status 404
+      { error: "No pets found" }.to_json
+    end
     users.to_json
   end
+
 
   # Route to create a new user
   post '/users/create' do
@@ -46,8 +73,8 @@ class UserController < Sinatra::Base
 
     if user && BCrypt::Password.new(user.password_hash) == data['password']
       # Return the authenticated user as JSON
+      session[:user_id] = 2
       user.to_json
-      session[:user_id] = user.id
     else
       # Return an error if authentication fails
       status 401
