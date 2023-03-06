@@ -36,29 +36,21 @@ class PetsController < Sinatra::Base
   end
 end
 
-  # Route to display all pets
-  get '/pets' do
+get '/pets' do
+  owner_id = params[:owner_id]
+  if owner_id.present?
+    pets = Pet.where(owner_id: owner_id)
+  else
     pets = Pet.all
-    if pets
-      content_type :json
-      pets.map { |pet| { pet: pet } }.to_json
-    else
-      status 404
-      { error: "No pets found" }.to_json
-    end
   end
-
-  # Route to get the pets owned by the currently logged in user
-get '/users/pets' do
-  # Find the user by user_id in the session
-  user = User.find(session[:user_id])
-
-  # Find the pets owned by the user
-  pets = user.pets
-
-  # Return the pets as JSON
-  pets.to_json
+  if pets.present?
+    content_type :json
+    { pets: pets }.to_json
+  else
+    halt 404
+  end
 end
+
 
   # Route to display a specific pet by ID
   get '/pets/:id' do
@@ -70,6 +62,7 @@ end
       halt 404
     end
   end
+
 
 # Route to update a specific pet by ID
 put "/pets/update/:id" do
