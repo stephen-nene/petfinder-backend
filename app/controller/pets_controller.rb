@@ -8,7 +8,6 @@ class PetsController < Sinatra::Base
   end
 
   private
-
   def set_cors_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
@@ -19,6 +18,22 @@ class PetsController < Sinatra::Base
   get '/' do
     'Welcome to Petfinder!'
   end
+
+  get '/mypet' do
+    owner_id = session[:user_id]
+    if owner_id.present?
+      pets = Pet.where(owner_id: owner_id)
+    else
+      halt 401, "Unauthorized"
+    end
+    if pets.present?
+      content_type :json
+      { pets: pets }.to_json
+    else
+      halt 404
+    end
+  end
+
 
  # Route to create a new pet
  post '/pets/create' do
