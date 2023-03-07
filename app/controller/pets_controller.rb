@@ -14,11 +14,12 @@ class PetsController < Sinatra::Base
 
     if request.request_method == 'OPTIONS'
       headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'POST, PUT, OPTIONS'
-      headers['Access-Control-Allow-Headers'] = 'Content-Type'
+      headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+      headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
       halt 200
     end
   end
+
 
   # Route to display a welcome message
   get '/' do
