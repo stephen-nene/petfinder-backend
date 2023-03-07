@@ -14,7 +14,7 @@ class PetsController < Sinatra::Base
 
     if request.request_method == 'OPTIONS'
       headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+      headers['Access-Control-Allow-Methods'] = 'POST, PUT, OPTIONS'
       headers['Access-Control-Allow-Headers'] = 'Content-Type'
       halt 200
     end
