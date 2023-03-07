@@ -1,23 +1,24 @@
-# require 'sinatra/cross_origin'
+require 'sinatra/base'
+require 'sinatra/cross_origin'
 
 class PetsController < Sinatra::Base
-  before do
-    set_cors_headers
+  configure do
+    enable :cross_origin
   end
 
-  private
+  before do
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+  end
 
-  def set_cors_headers
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+  options "*" do
+    response.headers['Allow'] = 'HEAD,GET,PUT,DELETE,OPTIONS'
 
-    if request.request_method == 'OPTIONS'
-      headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-      headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-      halt 200
-    end
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept'
+
+    200
   end
 
 
