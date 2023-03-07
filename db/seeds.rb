@@ -8,7 +8,7 @@ Pet.destroy_all
 
 api_key = 'yf0BpvnxgEIApOIZ2OV71ObWGE8T3nxqebIrZVGmdynJtNO95h'
 api_secret = '5rzQEqynWUBgUzB9kWrOXn6pNPqUC9jnfqXxSrSC'
-token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJ5ZjBCcHZueGdFSUFwT0laMk9WNzFPYldHRThUM254cWViSXJaVkdtZHluSnROTzk1aCIsImp0aSI6IjMzNzZhMTViNzIyZWNhYWJiOTRlZTU0YTdiNWU2NzZmNDVkYTIwYzk3MWNiYWQ4ODNhYmJhM2FhZDI3ZTc2OWFjNTUzMzY0ZjVmNDJmNjVlIiwiaWF0IjoxNjc4MTczMDA0LCJuYmYiOjE2NzgxNzMwMDQsImV4cCI6MTY3ODE3NjYwNCwic3ViIjoiIiwic2NvcGVzIjpbXX0.Vzo3hYUvMSYGZQokvAivBPRjvbE4_7ibTMqqQgokutANw0HW0Q_jZX6iCBfuZXND2-fpTXQiGmdQ5iaxfp326ORd9GOLjJsn8uvBZJpkgrcvFYPlrp6iusNM55kDeav5vXgh0F9gk1ktLFOEul-KYxlS-sXOX5TpkdooJPmGmer9BbRvnW6fgpAsFH6IaTuVYkaVhPx2vk95OlE-i8wPhvcSbk7B2jAXdX_DPCVM6D2-hNmCrtK8NmATGXoUF9qXb1K6j3w3Y8v5T9ej6BBDY0l3Gx6782qCONI2sEuTkgH-DtWmtnDef5Cm2jyQ9F10O_xcwEr4jWdV9yXUePgZiQ"
+token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJ5ZjBCcHZueGdFSUFwT0laMk9WNzFPYldHRThUM254cWViSXJaVkdtZHluSnROTzk1aCIsImp0aSI6IjE2ZWI4YmYwODgxODc5NWExZGFhOGI5MzM3ZTBjNzI5MzRiOGNhMjFiZWZmZTNhMzAwZmZjMjRmNWFmNDM5ZDY0MDE5YzllOGViZTgwMzMzIiwiaWF0IjoxNjc4MTc4Mzc5LCJuYmYiOjE2NzgxNzgzNzksImV4cCI6MTY3ODE4MTk3OSwic3ViIjoiIiwic2NvcGVzIjpbXX0.WvFXfwgyfxgTKRuKUjfZWBfJVE-MKDjDxucV-mC-6d89po5YSveAZziKpJwkX3EJPlISytIPXOHNW_Ka3SqYwSzxAFVIINnAeJeFH_eoVWAQb71HAjjp_TeG-kAtSGGUANrWmTTifz7lreNUuj-U9qNnxXJXSqLTjEOU5UAzpOMLXMe5KrpTQO7gqMcxtzJp13GypQXPj89y4ymJR4cW6xLpHVlxljogOIY1D8pyLcbosUDE0Hxa340ifBcfr3b4Ds4JqiMKV5ZenjflJ6FhN6_MaV1TDyB11eup0EuI77lN04FCfQ1EYz3-RHeP72wD8DFrMtJFWbtlQLuJJITDXA"
 
 puts "fetching data ............. "
 # Fetch 5 pets for each animal type
@@ -18,7 +18,7 @@ animal_types.each do |animal_type|
     'Authorization' => "Bearer #{token}",
     params: {
       type: animal_type,
-      limit: 5
+      limit: 10
     }
   }
   created_at = Faker::Time.between(from: DateTime.now - 1.year, to: DateTime.now)
@@ -27,6 +27,10 @@ animal_types.each do |animal_type|
   # Save each pet to the database
   pets = JSON.parse(response)['animals']
   pets.each do |pet|
+    if pet['photos'][0].present?
+      url = pet['photos'][0]['medium']
+      # puts pet['photos'][0]['medium']
+    end
     age = rand(3..10)
     Pet.create(
       name: pet['name'],
@@ -35,7 +39,7 @@ animal_types.each do |animal_type|
       age: age,
       gender: pet['gender'],
       description: pet['description'],
-      url: pet['url'],
+      url: url,
       created_at: created_at,
       updated_at: updated_at
     )
@@ -66,7 +70,7 @@ create_user(3)
 puts " "
 pet_ids = Pet.pluck(:id)
 
-pet_ids.sample(5).each do |pet_id|
+pet_ids.sample(10).each do |pet_id|
   owner_id = User.pluck(:id).sample
   Pet.find(pet_id).update(owner_id: owner_id)
 end
